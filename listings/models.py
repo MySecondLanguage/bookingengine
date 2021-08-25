@@ -47,7 +47,7 @@ class HotelRoom(models.Model):
     room_number = models.CharField(max_length=255,)
 
     def __str__(self):
-        return self.room_number
+        return f'{self.room_number} - {self.hotel_room_type}'
 
 
 class BookingInfo(models.Model):
@@ -74,3 +74,31 @@ class BookingInfo(models.Model):
             obj = self.hotel_room_type
             
         return f'{obj} {self.price}'
+
+
+
+class DaySlot(models.Model):
+    room = models.OneToOneField(
+        HotelRoomType,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="room_day_slots",
+    )
+    apartment = models.ForeignKey( # store only if listing type aparthment
+        Listing,
+        on_delete=models.CASCADE,
+        related_name="apartment_day_slots",
+        null=True,
+        blank=True,
+    )
+    spot = models.DateField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['spot', 'apartment'], name='apartment_slots'),
+            models.UniqueConstraint(fields=['spot', 'room'], name='room_slots'),
+        ]
+
+    def __str__(self):
+        return f'{self.spot} - {self.room} - {self.apartment}'

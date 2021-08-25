@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Listing, HotelRoomType, HotelRoom, BookingInfo
+from .models import Listing, HotelRoomType, HotelRoom, BookingInfo, DaySlot
 
 
 class HotelRoomTypeInline(admin.StackedInline):
@@ -38,4 +38,9 @@ class HotelRoomAdmin(admin.ModelAdmin):
 
 @admin.register(BookingInfo)
 class BookingInfoAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(DaySlot)
+class DayInfoAdmin(admin.ModelAdmin):
     pass
