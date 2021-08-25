@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
 class Listing(models.Model):
@@ -99,6 +100,14 @@ class DaySlot(models.Model):
             models.UniqueConstraint(fields=['spot', 'apartment'], name='apartment_slots'),
             models.UniqueConstraint(fields=['spot', 'room'], name='room_slots'),
         ]
+
+    def clean(self):
+        if self.room and self.apartment:
+            raise ValidationError("You can't book both room and appartment together")
+        
+        if self.apartment:
+            if self.appartment.listing_type != 'apartment':
+                raise ValidationError("The instance is not apartment type")
 
     def __str__(self):
         return f'{self.spot} - {self.room} - {self.apartment}'
